@@ -79,6 +79,7 @@ Usage:
   ios syslog [options]
   ios screenshot [options] [--output=<outfile>] [--stream] [--port=<port>]
   ios instruments notifications [options]
+  ios network [options]
   ios crash ls [<pattern>] [options]
   ios crash cp <srcpattern> <target> [options]
   ios crash rm <cwd> <pattern> [options]
@@ -475,6 +476,10 @@ The commands work as following:
 		return
 	}
 	if instrumentsCommand(device, arguments) {
+		return
+	}
+
+	if networkCommand(device, arguments) {
 		return
 	}
 
@@ -1273,6 +1278,15 @@ func instrumentsCommand(device ios.DeviceEntry, arguments docopt.Opts) bool {
 		if err != nil {
 			log.Warnf("timeout during close %v", err)
 		}
+	}
+	return b
+}
+
+func networkCommand(device ios.DeviceEntry, arguments docopt.Opts) bool {
+	b, _ := arguments.Bool("network")
+	if b {
+		instruments.ListenNetwork(device)
+		fmt.Println("over")
 	}
 	return b
 }
