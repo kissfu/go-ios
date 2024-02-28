@@ -138,6 +138,7 @@ Usage:
   ios uninstall <bundleID> [options]
   ios voiceover (enable | disable | toggle | get) [--force] [options]
   ios zoom (enable | disable | toggle | get) [--force] [options]
+  ios network [options]
 
 Options:
   -v --verbose              Enable Debug Logging.
@@ -499,6 +500,10 @@ The commands work as following:
 		return
 	}
 	if instrumentsCommand(device, arguments) {
+		return
+	}
+
+	if networkCommand(device, arguments) {
 		return
 	}
 
@@ -1457,6 +1462,15 @@ func toEnvs(envsIn []string) map[string]interface{} {
 	}
 
 	return env
+}
+
+func networkCommand(device ios.DeviceEntry, arguments docopt.Opts) bool {
+	b, _ := arguments.Bool("network")
+	if b {
+		instruments.ListenNetwork(device)
+		fmt.Println("over")
+	}
+	return b
 }
 
 func crashCommand(device ios.DeviceEntry, arguments docopt.Opts) bool {
