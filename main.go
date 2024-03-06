@@ -129,6 +129,7 @@ Usage:
   ios zoomtouch (enable | disable | toggle | get) [--force] [options]
   ios diskspace [options]
   ios batterycheck [options]
+  ios battery [options]
   ios tunnel start [options] [--pair-record-path=<pairrecordpath>] [--userspace]
   ios tunnel ls [options]
   ios tunnel stopagent 
@@ -1055,6 +1056,11 @@ The commands work as following:
 		printBatteryDiagnostics(device)
 		return
 	}
+	b, _ = arguments.Bool("battery")
+	if b {
+		printBattery(device)
+		return
+	}
 
 	if tunnelCommand {
 		startCommand, _ := arguments.Bool("start")
@@ -1744,6 +1750,12 @@ func printDiagnostics(device ios.DeviceEntry) {
 	exitIfError("getting valued failed", err)
 
 	fmt.Println(convertToJSONString(values))
+}
+
+func printBattery(device ios.DeviceEntry) {
+	resp, _ := diagnostics.Battery(device)
+	jb, _ := marshalJSON(resp)
+	fmt.Printf("battery:%s\n", jb)
 }
 
 func printBatteryDiagnostics(device ios.DeviceEntry) {
