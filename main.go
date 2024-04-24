@@ -137,6 +137,7 @@ Usage:
   ios devmode (enable | get) [--enable-post-restart] [options]
   ios rsd ls [options]
   ios network [options]
+  ios fps [options]
 
 Options:
   -v --verbose              Enable Debug Logging.
@@ -498,6 +499,10 @@ The commands work as following:
 	}
 
 	if networkCommand(device, arguments) {
+		return
+	}
+
+	if fpsCommand(device, arguments) {
 		return
 	}
 
@@ -1418,6 +1423,15 @@ func networkCommand(device ios.DeviceEntry, arguments docopt.Opts) bool {
 	b, _ := arguments.Bool("network")
 	if b {
 		instruments.ListenNetwork(device)
+		fmt.Println("over")
+	}
+	return b
+}
+
+func fpsCommand(device ios.DeviceEntry, arguments docopt.Opts) bool {
+	b, _ := arguments.Bool("fps")
+	if b {
+		instruments.IterOpenglData(device)
 		fmt.Println("over")
 	}
 	return b
