@@ -1,8 +1,8 @@
 package dtx
 
 import (
-	"encoding/json"
 	"bufio"
+	"encoding/json"
 	"errors"
 	"io"
 	"math"
@@ -130,6 +130,14 @@ func (g GlobalDispatcher) Dispatch(msg Message) {
 	}
 	// network
 	v := msg.Payload[0]
+
+	b, _ := json.Marshal(v)
+
+	str := string(b)
+	if str == "_notifyOfPublishedCapabilities:" {
+		return
+	}
+	// network
 	if s, ok := v.([]interface{}); ok && len(s) == 2 {
 		_type := s[0].(uint64)
 		if _type == 2 {
@@ -137,6 +145,14 @@ func (g GlobalDispatcher) Dispatch(msg Message) {
 			println("network:" + string(s1))
 		}
 	}
+
+	// fps
+	if m, ok := v.(map[string]interface{}); ok {
+		if b, ok2 := m["CoreAnimationFramesPerSecond"]; ok2 {
+			println("fps:", b.(uint64))
+		}
+	}
+
 	log.Tracef("Global Dispatcher Received: %s %s", msg.Payload, msg.Auxiliary)
 	if msg.HasError() {
 		log.Error(msg.Payload[0])

@@ -8,6 +8,7 @@ const (
 	procControlPosixSpawnChannel = "com.apple.instruments.server.services.processcontrol.posixspawn"
 	mobileNotificationsChannel   = "com.apple.instruments.server.services.mobilenotifications"
 	mobileNetworkingChannel      = "com.apple.instruments.server.services.networking"
+	GraphicsOpenGlChannel        = "com.apple.instruments.server.services.graphics.opengl"
 )
 
 const appListingChannel = "com.apple.instruments.server.services.device.applictionListing"
