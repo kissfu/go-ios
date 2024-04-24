@@ -131,6 +131,7 @@ Usage:
   ios diskspace [options]
   ios batterycheck [options]
   ios battery [options]
+  ios fps [options]
   ios tunnel start [options] [--pair-record-path=<pairrecordpath>] [--userspace]
   ios tunnel ls [options]
   ios tunnel stopagent 
@@ -248,6 +249,8 @@ The commands work as following:
    ios timeformat (24h | 12h | toggle | get) [--force] [options] Sets, or returns the state of the "time format". iOS 11+ only (Use --force to try on older versions).
    ios diskspace [options]											  Prints disk space info.
    ios batterycheck [options]                                         Prints battery info.
+   ios battery [options]                                              Prints battery useage info.
+   ios fps [options]                                              	  Prints fps info.
    ios tunnel start [options] [--pair-record-path=<pairrecordpath>] [--enabletun]   Creates a tunnel connection to the device. If the device was not paired with the host yet, device pairing will also be executed.
    >           														  On systems with System Integrity Protection enabled the argument '--pair-record-path=default' can be used to point to /var/db/lockdown/RemotePairing/user_501.
    >                                                                  If nothing is specified, the current dir is used for the pair record.
@@ -486,6 +489,10 @@ The commands work as following:
 	}
 
 	if sysmontapCommand(device, arguments) {
+		return
+	}
+
+	if fpsCommand(device, arguments) {
 		return
 	}
 
@@ -1305,6 +1312,15 @@ func sysmontapCommand(device ios.DeviceEntry, arguments docopt.Opts) bool {
 	b, _ := arguments.Bool("sysmontap")
 	if b {
 		instruments.ListenSysmontap(device)
+		fmt.Println("over")
+	}
+	return b
+}
+
+func fpsCommand(device ios.DeviceEntry, arguments docopt.Opts) bool {
+	b, _ := arguments.Bool("fps")
+	if b {
+		instruments.IterOpenglData(device)
 		fmt.Println("over")
 	}
 	return b

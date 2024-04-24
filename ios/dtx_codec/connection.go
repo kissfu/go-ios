@@ -110,6 +110,14 @@ func (g GlobalDispatcher) Dispatch(msg Message) {
 	}
 	// network
 	v := msg.Payload[0]
+
+	b, _ := json.Marshal(v)
+
+	str := string(b)
+	if str == "_notifyOfPublishedCapabilities:" {
+		return
+	}
+
 	if s, ok := v.([]interface{}); ok && len(s) == 2 {
 		_type := s[0].(uint64)
 		if _type == 2 {
@@ -127,6 +135,12 @@ func (g GlobalDispatcher) Dispatch(msg Message) {
 					println("sysmontap:" + string(s1))
 				}
 			}
+		}
+	}
+
+	if m, ok := v.(map[string]interface{}); ok {
+		if b, ok2 := m["CoreAnimationFramesPerSecond"]; ok2 {
+			println("fps:", b.(uint64))
 		}
 	}
 
