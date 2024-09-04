@@ -168,6 +168,20 @@ func (conn *DeviceConnection) Send(bytes []byte) error {
 	return nil
 }
 
+// 实现 DeviceConnectionInterface 接口的 SendAny 方法
+func (conn *DeviceConnectionRWC) SendAny(req any) error {
+	data, err := plist.Marshal(req, plist.XMLFormat)
+	if err != nil {
+		return err
+	}
+
+	if err := binary.Write(conn.c, binary.BigEndian, uint32(len(data))); err != nil {
+		return err
+	}
+
+	return binary.Write(conn.c, binary.BigEndian, data)
+}
+
 func (conn *DeviceConnection) SendAny(req any) error {
 	data, err := plist.Marshal(req, plist.XMLFormat)
 	if err != nil {
