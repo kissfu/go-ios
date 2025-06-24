@@ -60,7 +60,7 @@ func main() {
 	Main()
 }
 
-const version = "local-build"
+const version = "7.6.7"
 
 // Main Exports main for testing
 func Main() {
